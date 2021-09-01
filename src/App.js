@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import GitCard from './components/GitCard';
+
 class App extends React.Component {
   state = {
     name: '',
@@ -14,10 +16,11 @@ class App extends React.Component {
   componentDidMount() {
     axios.get('https://api.github.com/users/fromtimwithcode')
       .then(res => {
-        console.log(res);
         this.setState({
+          ...this.state,
           name: res.data.name,
           username: res.data.login,
+          avatarSrc: res.data.avatar_url,
           followingCount: res.data.following,
           followCount: res.data.followers
         });
@@ -29,7 +32,8 @@ class App extends React.Component {
     axios.get('https://api.github.com/users/fromtimwithcode/followers')
       .then(res => {
         this.setState({
-          followers: res.data.followers
+          ...this.state,
+          followers: res.data
         })
       })
       .catch(err => {
@@ -40,7 +44,12 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        
+        <GitCard
+          name={this.state.name}
+          username={this.state.username}
+          avatarSrc={this.state.avatarSrc}
+          followingCount={this.state.followingCount}
+          followCount={this.state.followCount} />
       </div>
     );
   }
